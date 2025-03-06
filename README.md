@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/Invens/greenlantern.git"><img src=".imgs/greenLantern.png" alt="GreenLantern"></a>
+  <a href="https://github.com/Invens/greenlantern.git"><img src="https://github.com/Invens/greenlantern/blob/main/.imgs/greenlantern.png" alt="GreenLantern"></a>
 
 </h1>
 
