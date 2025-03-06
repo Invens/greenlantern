@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/ultrasecurity/Storm-Breaker"><img src=".imgs/greenLantern.webp" alt="GreenLantern"></a>
+  <a href="https://github.com/Invens/greenlantern.git"><img src=".imgs/greenLantern.png" alt="GreenLantern"></a>
 
 </h1>
 
