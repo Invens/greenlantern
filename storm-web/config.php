@@ -1,9 +1,9 @@
 <?php
 
 $CONFIG = array (
-    "admin" => [
-        "fullname" => "hacker", 
-        "password" => "admin",
+    "green" => [
+        "fullname" => "LOKI", 
+        "password" => "green",
     ], 
     
 );
