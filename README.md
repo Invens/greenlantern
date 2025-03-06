@@ -1,8 +1,8 @@
-<h1 align="center" style="font-size: 36px;">Green Lantern</h1>
+<h1 align="center" style="font-size: 70px;">Green Lantern</h1>
 
 <p align="center">
   <a href="https://github.com/Invens/greenlantern.git">
-    <img src="https://github.com/Invens/greenlantern/blob/main/.imgs/greenlantern.png" alt="Green Lantern" width="300">
+    <img src="https://github.com/Invens/greenlantern/blob/main/.imgs/greenlantern.png" alt="Green Lantern" width="720">
   </a>
 </p>
 
