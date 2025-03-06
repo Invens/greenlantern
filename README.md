@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/ultrasecurity/Storm-Breaker"><img src=".imgs/1demo.png" alt="StormBreaker"></a>
+  <a href="https://github.com/ultrasecurity/Storm-Breaker"><img src=".imgs/greenLantern.webp" alt="GreenLantern"></a>
 
 </h1>
 
@@ -22,7 +22,7 @@
 
 </p>
 
-![demo](.imgs/screen1.jpeg)
+<!-- ![demo](.imgs/screen1.jpeg) -->
 
 ### Features:
 
