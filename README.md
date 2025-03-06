@@ -1,12 +1,11 @@
 <h1 align="center">
-<h1>
+  <br>
   ________                            .____                   __                       
  /  _____/______  ____  ____   ____   |    |   _____    _____/  |_  ___________  ____  
 /   \  __\_  __ \/ __ \/ __ \ /    \  |    |   \__  \  /    \   __\/ __ \_  __ \/    \ 
 \    \_\  \  | \|  ___|  ___/|   |  \ |    |___ / __ \|   |  \  | \  ___/|  | \/   |  \
  \______  /__|   \___  >___  >___|  / |_______  ____  /___|  /__|  \___  >__|  |___|  /
         \/           \/    \/     \/          \/    \/     \/          \/           \/ 
-</h1>
   <br>
   <a href="https://github.com/Invens/greenlantern.git">
     <img src="https://github.com/Invens/greenlantern/blob/main/.imgs/greenlantern.png" alt="Green Lantern" width="300">
@@ -21,8 +20,7 @@
     <img src="https://img.shields.io/badge/python-v3-blue">
   </a>
   <a href="https://php.net">
-    <img src="https://img.shields.io/badge/php-7.4.4-green"
-         alt="php">
+    <img src="https://img.shields.io/badge/php-7.4.4-green" alt="php">
   </a>
   <a href="https://en.wikipedia.org/wiki/Linux">
     <img src="https://img.shields.io/badge/Platform-Linux-red">
@@ -55,6 +53,7 @@
 
 > ⚠ **Ngrok Removal Notice**:  
 > In the latest version, we have removed built-in Ngrok and provided users full control over local hosting. Now, Green Lantern sets up a local server, but **you must manually configure and start Ngrok** on your desired port.  
+
 ---
 
 ## 🔐 Default Credentials:
