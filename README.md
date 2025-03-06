@@ -1,16 +1,14 @@
-<h1 align="center">
-  <h1 >
-  Green Lantern
-  </h1>
+<h1 align="center" style="font-size: 36px;">Green Lantern</h1>
+
+<p align="center">
   <a href="https://github.com/Invens/greenlantern.git">
     <img src="https://github.com/Invens/greenlantern/blob/main/.imgs/greenlantern.png" alt="Green Lantern" width="300">
   </a>
-</h1>
+</p>
 
 <h4 align="center">A Powerful Tool with Next-Level Capabilities.</h4>
 
 <p align="center">
-
   <a href="http://python.org">
     <img src="https://img.shields.io/badge/python-v3-blue">
   </a>
@@ -20,34 +18,31 @@
   <a href="https://en.wikipedia.org/wiki/Linux">
     <img src="https://img.shields.io/badge/Platform-Linux-red">
   </a>
-
 </p>
 
 ---
 
 ## 🚀 Features:
 
-✅ **Obtain Device Information** (No Permission Required!)  
-✅ **Access Device Location** (Smartphones)  
-✅ **Access Webcam** 📷  
-✅ **Access Microphone** 🎙️  
-✅ **Remote Control Functionalities** 🖥️  
+- ✅ **Obtain Device Information** (No Permission Required!)  
+- ✅ **Access Device Location** (Smartphones)  
+- ✅ **Access Webcam** 📷  
+- ✅ **Access Microphone** 🎙️  
+- ✅ **Remote Control Functionalities** 🖥️  
 
 ---
 
 ## 🛠 Update Log:
 
-📅 **Latest Update**: March 2025  
-🔧 **Completely Rebuilt from Scratch** – Now available as a **Web Panel** (previously CLI-based).  
-⚡ **Bug Fixes & Performance Optimization**  
-🌐 **Auto-download & Setup for Ngrok**  
-📂 **Downloadable Logs (NEW Feature!)**  
-🛠 **Clear Logs Anytime**  
-📡 **Run it on Your Personal Host & Domain** – No more Ngrok limitations.  
-🎨 **Enhanced & Modernized UI**  
+- 📅 **Latest Update**: March 2025  
+- 🔧 **Rebuilt from Scratch** – Now a **Web Panel** (previously CLI-based).  
+- ⚡ **Bug Fixes & Performance Optimization**  
+- 🌐 **Auto-download & Setup for Ngrok**  
+- 📂 **Downloadable Logs (NEW Feature!)**  
+- 🎨 **Enhanced & Modernized UI**  
 
 > ⚠ **Ngrok Removal Notice**:  
-> In the latest version, we have removed built-in Ngrok and provided users full control over local hosting. Now, Green Lantern sets up a local server, but **you must manually configure and start Ngrok** on your desired port.  
+> Green Lantern now sets up a local server, but **you must manually start Ngrok** on your desired port.  
 
 ---
 
@@ -55,13 +50,13 @@
 
 - **Username**: `admin`  
 - **Password**: `admin`  
-- You can edit `config.php` to change these settings.  
+- Edit `config.php` to change credentials.  
 
 ---
 
 ## 📦 Dependencies
 
-**Green Lantern** requires the following programs to function properly:
+**Green Lantern** requires:
 
 - `PHP`
 - `Python 3`
