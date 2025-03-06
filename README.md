@@ -1,12 +1,7 @@
 <h1 align="center">
-  <br>
-  ________                            .____                   __                       
- /  _____/______  ____  ____   ____   |    |   _____    _____/  |_  ___________  ____  
-/   \  __\_  __ \/ __ \/ __ \ /    \  |    |   \__  \  /    \   __\/ __ \_  __ \/    \ 
-\    \_\  \  | \|  ___|  ___/|   |  \ |    |___ / __ \|   |  \  | \  ___/|  | \/   |  \
- \______  /__|   \___  >___  >___|  / |_______  ____  /___|  /__|  \___  >__|  |___|  /
-        \/           \/    \/     \/          \/    \/     \/          \/           \/ 
-  <br>
+  <h1 >
+  Green Lantern
+  </h1>
   <a href="https://github.com/Invens/greenlantern.git">
     <img src="https://github.com/Invens/greenlantern/blob/main/.imgs/greenlantern.png" alt="Green Lantern" width="300">
   </a>
