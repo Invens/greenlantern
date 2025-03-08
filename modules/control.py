@@ -38,7 +38,6 @@ def md5_hash():
     result = hashlib.md5(str2hash.encode())
     return result
 
-
 def find_free_port():
     """Find an available port dynamically."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -47,8 +46,6 @@ def find_free_port():
 
 def run_php_server(port=2525):
     """Start PHP server on a free port and launch Cloudflare Tunnel."""
-    global php_process, tunnel_process
-
     while True:
         try:
             # Check if the port is in use
@@ -62,32 +59,40 @@ def run_php_server(port=2525):
         except Exception:
             break  # Assume the port is free
 
-    print(f"🚀 Starting PHP server on port {port}...")
-    php_process = subprocess.Popen(["php", "-S", f"localhost:{port}"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    # Automatically detect the script's directory and set the document root
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    document_root = os.path.join(script_directory, "green-lantern")
+
+    # Ensure the document root exists
+    if not os.path.exists(document_root):
+        print(f"❌ Error: Document root not found: {document_root}")
+        return
+
+    print(f"🚀 Starting PHP server on port {port} with root: {document_root}...")
+    php_process = subprocess.Popen(
+        ["php", "-S", f"localhost:{port}", "-t", document_root],
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+    )
 
     # Wait a few seconds to ensure PHP server starts
     time.sleep(2)
 
-    # Start Cloudflare Tunnel and capture output
+    # Start Cloudflare Tunnel
     print("🌍 Starting Cloudflare Tunnel...")
     tunnel_process = subprocess.Popen(
         ["cloudflared", "tunnel", "--url", f"http://localhost:{port}"],
-        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
     )
 
+    # Capture Cloudflare Tunnel URL
     cloudflare_url = None
-
-    # Read Cloudflare output line by line and extract URL
     while True:
         line = tunnel_process.stdout.readline()
         if not line:
             break
-        print(line.strip())  # Print output for debugging
-
-        # Extract the Cloudflare Tunnel URL
-        match = re.search(r"https:\/\/[a-zA-Z0-9-]+\.trycloudflare\.com", line)
-        if match:
-            cloudflare_url = match.group(0)
+        print(line.strip())  # Print logs for debugging
+        if "https://" in line:
+            cloudflare_url = line.strip()
             print(f"✅ Your public URL: {cloudflare_url}")
             break
 
