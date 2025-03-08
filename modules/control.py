@@ -1,7 +1,18 @@
 from colorama import Fore,Back,Style
 import subprocess,json,time,hashlib
-import socket 
+import subprocess
+import socket
+import time
 import random
+import re
+import requests
+import signal
+import os
+
+# Store process references globally
+php_process = None
+tunnel_process = None
+
 def kill_php_proc():
     with open("green-lantern/Settings.json", "r") as jsonFile:
         data = json.load(jsonFile)
@@ -28,41 +39,84 @@ def md5_hash():
     return result
 
 
-
 def find_free_port():
-    """Find a free port dynamically."""
+    """Find an available port dynamically."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind(("", 0))  # Bind to any available port
-        return s.getsockname()[1]  # Get the assigned port number
+        s.bind(("", 0))  # Bind to any free port
+        return s.getsockname()[1]  # Return assigned port number
 
 def run_php_server(port=2525):
-    """Start PHP server on a free port if 2525 is busy."""
+    """Start PHP server on a free port and launch Cloudflare Tunnel."""
+    global php_process, tunnel_process
+
     while True:
         try:
-            # Check if port is in use
+            # Check if the port is in use
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 if s.connect_ex(("localhost", port)) == 0:
-                    print(f"Port {port} is busy, trying another...")
+                    print(f"⚠️ Port {port} is busy, trying another...")
                     port = random.randint(2000, 9999)  # Pick a random port
                 else:
                     break  # Port is free
 
         except Exception:
-            break  # If an error occurs, assume the port is free
+            break  # Assume the port is free
 
-    print(f"Starting PHP server on port {port}...")
-    subprocess.Popen(["php", "-S", f"localhost:{port}"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    print(f"🚀 Starting PHP server on port {port}...")
+    php_process = subprocess.Popen(["php", "-S", f"localhost:{port}"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     # Wait a few seconds to ensure PHP server starts
     time.sleep(2)
 
-    # Start Cloudflare Tunnel
-    print("Starting Cloudflare Tunnel...")
-    tunnel_process = subprocess.Popen(["cloudflared", "tunnel", "--url", f"http://localhost:{port}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # Start Cloudflare Tunnel and capture output
+    print("🌍 Starting Cloudflare Tunnel...")
+    tunnel_process = subprocess.Popen(
+        ["cloudflared", "tunnel", "--url", f"http://localhost:{port}"],
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+    )
 
-    # Capture and print the Cloudflare public URL
-    for line in tunnel_process.stdout:
-        decoded_line = line.decode().strip()
-        if "https://" in decoded_line:
-            print(f"Your public URL: {decoded_line}")
+    cloudflare_url = None
+
+    # Read Cloudflare output line by line and extract URL
+    while True:
+        line = tunnel_process.stdout.readline()
+        if not line:
             break
+        print(line.strip())  # Print output for debugging
+
+        # Extract the Cloudflare Tunnel URL
+        match = re.search(r"https:\/\/[a-zA-Z0-9-]+\.trycloudflare\.com", line)
+        if match:
+            cloudflare_url = match.group(0)
+            print(f"✅ Your public URL: {cloudflare_url}")
+            break
+
+    if not cloudflare_url:
+        print("❌ Cloudflare Tunnel failed to start or URL was not found.")
+
+    return port  # Return the running port
+
+def stop_services():
+    """Stop PHP server and Cloudflare Tunnel when exiting."""
+    global php_process, tunnel_process
+
+    if php_process:
+        print("🛑 Stopping PHP server...")
+        php_process.terminate()
+        php_process.wait()
+
+    if tunnel_process:
+        print("🛑 Stopping Cloudflare Tunnel...")
+        tunnel_process.terminate()
+        tunnel_process.wait()
+
+    print("✅ Services stopped successfully.")
+
+# Handle termination signals (CTRL+C, system exit)
+def signal_handler(sig, frame):
+    print("\n🛑 Exiting... Cleaning up processes.")
+    stop_services()
+    exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)  # Handle CTRL+C
+signal.signal(signal.SIGTERM, signal_handler)  # Handle system termination
