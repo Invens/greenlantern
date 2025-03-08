@@ -33,11 +33,11 @@ def check_started():
 
 
 def check_update():
-    http = requests.get("https://raw.githubusercontent.com/ultrasecurity/Storm-Breaker/main/Settings.json").text
+    http = requests.get("https://github.com/Invens/greenlantern/blob/main/Settings.json").text
     
     http_json = json.loads(http)
 
-    with open("storm-web/Settings.json", "r") as jsonFile:
+    with open("green-lantern/Settings.json", "r") as jsonFile:
 
         data = json.load(jsonFile)
         if data['version'] < http_json['version']:
