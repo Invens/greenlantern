@@ -35,31 +35,52 @@ install_dependencies() {
 
     case "$DISTRO" in
         debian|ubuntu|kali|pop|linuxmint|parrot)
-            apt-get update && apt-get install -y python3 python3-pip php curl unzip
+            apt-get update && apt-get install -y python3 python3-pip python3-venv php curl unzip
         ;;
         arch|manjaro|arcolinux|garuda|artix)
             pacman -Sy --noconfirm python python-pip php curl unzip
         ;;
         fedora|centos|rhel)
-            yum update -y && yum install -y python3 python3-pip php curl unzip
+            yum update -y && yum install -y python3 python3-pip python3-virtualenv php curl unzip
         ;;
         termux)
             pkg update && pkg install -y python php curl unzip
         ;;
         alpine)
-            apk add --no-cache python3 py3-pip php curl unzip
+            apk add --no-cache python3 py3-pip py3-virtualenv php curl unzip
         ;;
         gentoo)
             emerge --sync && emerge -av dev-lang/php dev-python/pip net-misc/curl app-arch/unzip
         ;;
         freebsd|openbsd)
-            pkg update && pkg install -y python3 py3-pip php curl unzip
+            pkg update && pkg install -y python3 py3-pip py3-virtualenv php curl unzip
         ;;
         *)
             printf "${RED}Unsupported OS. Please install dependencies manually.${RST}\n"
             exit 1
         ;;
     esac
+}
+
+# ✅ Function to set up a Python virtual environment
+setup_venv() {
+    if [ ! -d "venv" ]; then
+        printf "${GRN}Creating a Python virtual environment...${RST}\n"
+        python3 -m venv venv
+    fi
+    source venv/bin/activate
+    printf "${BLU}Virtual environment activated.${RST}\n"
+}
+
+# ✅ Function to install Python dependencies inside venv
+install_python_requirements() {
+    setup_venv
+    if [ -f "requirements.txt" ]; then
+        pip install --upgrade pip
+        pip install -r requirements.txt
+    else
+        printf "${RED}requirements.txt not found! Skipping Python dependencies.${RST}\n"
+    fi
 }
 
 # ✅ Function to install Cloudflare Tunnel
@@ -73,16 +94,6 @@ install_cloudflared() {
     fi
 }
 
-# ✅ Function to install Python dependencies
-install_python_requirements() {
-    if [ -f "requirements.txt" ]; then
-        python3 -m pip install --upgrade pip
-        python3 -m pip install -r requirements.txt
-    else
-        printf "${RED}requirements.txt not found! Skipping Python dependencies.${RST}\n"
-    fi
-}
-
 # ✅ Main function to run all installations
 main() {
     check_root
@@ -90,7 +101,7 @@ main() {
     install_dependencies
     install_cloudflared
     install_python_requirements
-    printf "${GRN}✅ All dependencies installed successfully!${RST}\n"
+    printf "${GRN}✅ Installation complete! Use 'source venv/bin/activate' before running the tool.${RST}\n"
 }
 
 main  # Run the script
