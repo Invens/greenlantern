@@ -2,7 +2,7 @@ from colorama import Fore,Back,Style
 import subprocess,json,time,hashlib
 
 def kill_php_proc():
-    with open("storm-web/Settings.json", "r") as jsonFile:
+    with open("green-lantern/Settings.json", "r") as jsonFile:
         data = json.load(jsonFile)
         pid = data["pid"]
 
@@ -15,7 +15,7 @@ def kill_php_proc():
         else:
             pid.clear()
             data["pid"] = []
-            with open("storm-web/Settings.json", "w") as jsonFile:
+            with open("green-lantern/Settings.json", "w") as jsonFile:
                 json.dump(data, jsonFile)
 
     except:
@@ -31,16 +31,16 @@ def md5_hash():
 
 
 def run_php_server(port):
-    with open(f"storm-web/log/php-{md5_hash().hexdigest()}.log","w") as php_log:
-        proc_info = subprocess.Popen(("php","-S",f"localhost:{port}","-t","storm-web"),stderr=php_log,stdout=php_log).pid
+    with open(f"green-lantern/log/php-{md5_hash().hexdigest()}.log","w") as php_log:
+        proc_info = subprocess.Popen(("php","-S",f"localhost:{port}","-t","green-lantern"),stderr=php_log,stdout=php_log).pid
 
 
-    with open("storm-web/Settings.json", "r") as jsonFile:
+    with open("lantern/Settings.json", "r") as jsonFile:
         data = json.load(jsonFile)
         data["pid"].append(proc_info)
 
 
-    with open("storm-web/Settings.json", "w") as jsonFile:
+    with open("green-lantern/Settings.json", "w") as jsonFile:
         json.dump(data, jsonFile)
 
 
