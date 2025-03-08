@@ -16,12 +16,12 @@ def dependency():
 
 
 def check_started():
-    with open("storm-web/Settings.json", "r") as jsonFile:
+    with open("green-lantern/Settings.json", "r") as jsonFile:
         data = json.load(jsonFile)
 
     if data["is_start"] == False:
         data["is_start"] = True
-        with open("storm-web/Settings.json", "w") as jsonFile:
+        with open("green-lantern/Settings.json", "w") as jsonFile:
             json.dump(data, jsonFile)
 
 
