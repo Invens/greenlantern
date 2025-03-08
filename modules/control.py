@@ -1,5 +1,6 @@
 from colorama import Fore,Back,Style
 import subprocess,json,time,hashlib
+
 import subprocess
 import socket
 import time
@@ -8,6 +9,7 @@ import re
 import requests
 import signal
 import os
+import platform
 
 # Store process references globally
 php_process = None
@@ -37,7 +39,6 @@ def md5_hash():
     str2hash = time.strftime("%Y-%m-%d-%H:%M", time.gmtime())
     result = hashlib.md5(str2hash.encode())
     return result
-
 def find_free_port():
     """Find an available port dynamically."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -59,18 +60,25 @@ def run_php_server(port=2525):
         except Exception:
             break  # Assume the port is free
 
-    # Automatically detect the script's directory and set the document root
+    # Get the current directory dynamically
     script_directory = os.path.dirname(os.path.abspath(__file__))
-    document_root = os.path.join(script_directory, "green-lantern")
 
-    # Ensure the document root exists
+    # Adjust paths for Windows vs. Linux
+    if platform.system() == "Windows":
+        document_root = os.path.join(script_directory, "..", "green-lantern").replace("\\", "/")
+        php_executable = "php.exe"  # Windows PHP
+    else:
+        document_root = os.path.join(script_directory, "..", "green-lantern")
+        php_executable = "php"  # Linux PHP
+
+    # Ensure the directory exists
     if not os.path.exists(document_root):
-        print(f"❌ Error: Document root not found: {document_root}")
+        print(f"❌ Error: Document root '{document_root}' not found.")
         return
 
     print(f"🚀 Starting PHP server on port {port} with root: {document_root}...")
     php_process = subprocess.Popen(
-        ["php", "-S", f"localhost:{port}", "-t", document_root],
+        [php_executable, "-S", f"localhost:{port}", "-t", document_root],
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
     )
 
