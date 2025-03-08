@@ -33,7 +33,7 @@ def check_started():
 
 
 def check_update():
-    http = requests.get("https://github.com/Invens/greenlantern/blob/main/Settings.json").text
+    http = requests.get("https://raw.githubusercontent.com/Invens/greenlantern/main/Settings.json").text
     
     http_json = json.loads(http)
 
