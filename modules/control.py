@@ -9,8 +9,6 @@ def kill_php_proc():
     try:
         for i in pid:
             subprocess.getoutput(f"kill -9 {i}")
-
-
         
         else:
             pid.clear()
@@ -35,7 +33,7 @@ def run_php_server(port):
         proc_info = subprocess.Popen(("php","-S",f"localhost:{port}","-t","green-lantern"),stderr=php_log,stdout=php_log).pid
 
 
-    with open("lantern/Settings.json", "r") as jsonFile:
+    with open("green-lantern/Settings.json", "r") as jsonFile:
         data = json.load(jsonFile)
         data["pid"].append(proc_info)
 
