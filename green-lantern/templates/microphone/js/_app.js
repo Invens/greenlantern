@@ -18,7 +18,7 @@ redButton.addEventListener("click", Redirect);
 
 function Redirect() {
 
-window.open('https://sabzlearn.ir', '_blank');
+window.open('https://shopplydeal.com', '_blank');
 
 
 }
